@@ -4,9 +4,82 @@
 <head>
     <title>Rock-Paper-Scissors</title>
     <meta charset="UTF-8" />
+    <style>
+        #title {
+            text-align: center;
+        }
+
+        #playerChoice {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+
+        }
+
+        #compChoice {
+            display: flex;
+            justify-content: center;            
+        }
+
+        #playArea {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        #rock:hover,
+        #paper:hover,
+        #scissors:hover {
+            border: 3px solid #000;
+            box-shadow: 0 0 5px #000;
+        }
+
+        body {
+            font-family: Arial;
+        }
+
+        .image {
+            border: 3px solid #aaa;
+            margin: 20px;
+            width: 150px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .splitScreen {
+            flex-grow: 0;
+        }
+
+        
+    </style>
 </head>
 
 <body>
+
+    <h1 id="title">ROCK-PAPER-SCISSORS</h1>
+    <div id="playArea">
+        <div class="splitScreen">
+            <h3 class="header">SELECT YOUR CHOICE</h3>
+            <div id=playerChoice>
+                <img class="image" id="rock" src="rock-200.png">
+                <img class="image" id="paper" src="paper-200.png">
+                <img class="image" id="scissors" src="scissors-200.png">
+            </div>
+            <h3 class="header">SCORE: <span id=playerScore>0</span></h3>
+        </div>
+        <div class="splitScreen">
+            <h3 class="header">COMPUTER</h3>
+            <div id="compChoice">
+                <img class="image" id="compPic" src="rock-200.png">
+            </div>
+            <h3 class="header">SCORE: <span id="compScore">0</span></h3>
+        </div>
+    </div>
+    <h2 id="message" class="header">CHOOSE ROCK, PAPER, OR SCISSORS TO BEGIN!</h2>
+    <h2 id="endGame" class="header"></h2>
+
+
     <script>
         function computerPlay() {
             let choice = Math.floor(Math.random() * 3);
@@ -22,62 +95,124 @@
                     return "Something went wrong";
             }
         }
-        function playerPlay() {
-            let choice = "";
-            while (true) {
-                choice = prompt("Select 'rock', 'paper', or 'scissors'!")
-                choice = choice.toLowerCase();
-                if (choice === "rock" || choice === "paper" || choice === "scissors") {
-                    return choice;
-                }
+
+        // function playerPlay() {
+        //     let choice = "";
+        //     while (true) {
+        //         choice = prompt("Select 'rock', 'paper', or 'scissors'!")
+        //         choice = choice.toLowerCase();
+        //         if (choice === "rock" || choice === "paper" || choice === "scissors") {
+        //             return choice;
+        //         }
+        //     }
+        // }
+
+        function playRound(e) {
+            if (playerScore == 5 || computerScore == 5) {
+                playerScore = 0;
+                playerScoreDisplay.innerHTML = playerScore;
+                computerScore = 0;
+                computerScoreDisplay.innerHTML = computerScore;
+                endGameDisplay.innerHTML = "";
             }
-        }
-        function playRound(playerSelection, computerSelection) {
+
+            rock.style.backgroundColor = "#fff";
+            paper.style.backgroundColor = "#fff";
+            scissors.style.backgroundColor = "#fff";
+            compPic.style.backgroundColor = "#fff";
+
+
+            let playerSelection = e.target.id;
+            let computerSelection = computerPlay();
             if (playerSelection === computerSelection) {
-                return "Draw! You both picked " + playerSelection + "!";
+                e.target.style.backgroundColor = "#ff5";
+                compPic.style.backgroundColor = "#ff5";
+                message.innerHTML = ("Draw! You both picked " + playerSelection + "!");
             } else if (playerSelection === "rock" && computerSelection === "scissors") {
                 playerScore++;
-                return "You win! Rock beats scissors!";                
-            } else if (playerSelection === "paper" && computerSelection === "rock") { 
+                playerScoreDisplay.innerHTML = playerScore;
+                e.target.style.backgroundColor = "#0f8";
+                compPic.style.backgroundColor = "#f55";
+                message.innerHTML = ("You win! Rock beats scissors!");
+            } else if (playerSelection === "paper" && computerSelection === "rock") {
                 playerScore++;
-                return "You win! Paper beats rock!";
+                playerScoreDisplay.innerHTML = playerScore;
+                e.target.style.backgroundColor = "#0f8";
+                compPic.style.backgroundColor = "#f55";
+                message.innerHTML = ("You win! Paper beats rock!");
             } else if (playerSelection === "scissors" && computerSelection === "paper") {
                 playerScore++;
-                return "You win! Scissors beats paper!";
+                playerScoreDisplay.innerHTML = playerScore;
+                e.target.style.backgroundColor = "#0f8";
+                compPic.style.backgroundColor = "#f55";
+                message.innerHTML = ("You win! Scissors beats paper!");
             } else if (playerSelection === "rock" && computerSelection === "paper") {
                 computerScore++;
-                return "You lose! Paper beats rock!";                
+                computerScoreDisplay.innerHTML = computerScore;
+                e.target.style.backgroundColor = "#f55";
+                compPic.style.backgroundColor = "#0f8";
+                message.innerHTML = ("You lose! Paper beats rock!");
             } else if (playerSelection === "paper" && computerSelection === "scissors") {
                 computerScore++;
-                return "You lose! Scissors beats paper!";
+                computerScoreDisplay.innerHTML = computerScore;
+                e.target.style.backgroundColor = "#f55";
+                compPic.style.backgroundColor = "#0f8";
+                message.innerHTML = ("You lose! Scissors beats paper!");
             } else if (playerSelection === "scissors" && computerSelection === "rock") {
                 computerScore++;
-                return "You lose! Rock beats scissors!";                
+                computerScoreDisplay.innerHTML = computerScore;
+                e.target.style.backgroundColor = "#f55";
+                compPic.style.backgroundColor = "#0f8";
+                message.innerHTML = ("You lose! Rock beats scissors!");
             }
-        }
-        function game() {
-            console.log("Rock-Paper-Scissors, play against the computer over five rounds!");
-
-            playerScore = 0;
-            computerScore = 0;
-            for (let i = 0; i < 5; i++) {
-                console.log("\nRound: " + (i + 1));
-                let playerSelection = playerPlay();
-                let computerSelection = computerPlay();
-                console.log(playRound(playerSelection, computerSelection));
-                console.log("The score is:\nYou: " + playerScore + "\nComputer: " + computerScore);
-
+            if (playerScore == 5) {
+                endGameDisplay.innerHTML = "GAME OVER! You win!";                
             }
-            if (playerScore === computerScore) {
-                console.log("\nGAME OVER! Tie game! Final score:\nYou: " + playerScore + "\nComputer: " + computerScore);
-            }  else if (playerScore > computerScore) {
-                console.log("\nGAME OVER! You win! Final score:\nYou: " + playerScore + "\nComputer: " + computerScore);
-            }  else {
-                console.log("\nGAME OVER! You lose! Final score:\nYou: " + playerScore + "\nComputer: " + computerScore);
-            }    
+            else if (computerScore == 5) {
+                endGameDisplay.innerHTML = "GAME OVER! You lose!";
+            }
+
         }
+        // function game() {
+        //     console.log("Rock-Paper-Scissors, play against the computer over five rounds!");
+
+        //     playerScore = 0;
+        //     computerScore = 0;
+        //     for (let i = 0; i < 5; i++) {
+        //         console.log("\nRound: " + (i + 1));
+        //         let playerSelection = playerPlay();
+        //         let computerSelection = computerPlay();
+        //         console.log(playRound(playerSelection, computerSelection));
+        //         console.log("The score is:\nYou: " + playerScore + "\nComputer: " + computerScore);
+
+        //     }
+        //     if (playerScore === computerScore) {
+        //         console.log("\nGAME OVER! Tie game! Final score:\nYou: " + playerScore + "\nComputer: " + computerScore);
+        //     } else if (playerScore > computerScore) {
+        //         console.log("\nGAME OVER! You win! Final score:\nYou: " + playerScore + "\nComputer: " + computerScore);
+        //     } else {
+        //         console.log("\nGAME OVER! You lose! Final score:\nYou: " + playerScore + "\nComputer: " + computerScore);
+        //     }
+        // }        
+
         let playerScore = 0;
         let computerScore = 0;
+
+        const rock = document.getElementById("rock");
+        rock.addEventListener("click", playRound);
+
+        const paper = document.getElementById("paper");
+        paper.addEventListener("click", playRound);
+
+        const scissors = document.getElementById("scissors");
+        scissors.addEventListener("click", playRound);
+
+        const compPic = document.getElementById("compPic");
+        const message = document.getElementById("message");
+        const playerScoreDisplay = document.getElementById("playerScore");
+        const computerScoreDisplay = document.getElementById("compScore");
+        const endGameDisplay = document.getElementById("endGame");
+
 
 
     </script>
